@@ -46,6 +46,11 @@
 
   - [] logout api call
 
+- [] **public, private link cache**
+
+  - [] authenticated routes
+  - [] select public / private
+
 - out of scope:
   - spotify/youtube embedded components for relevant links
 

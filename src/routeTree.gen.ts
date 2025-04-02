@@ -13,9 +13,9 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
-import { Route as PathlessAuthLayoutRouteImport } from './routes/_pathlessAuthLayout/route'
+import { Route as AppRouteImport } from './routes/app/route'
 import { Route as IndexImport } from './routes/index'
-import { Route as PathlessAuthLayoutHomeImport } from './routes/_pathlessAuthLayout/home'
+import { Route as AppIndexImport } from './routes/app/index'
 
 // Create/Update Routes
 
@@ -31,8 +31,9 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const PathlessAuthLayoutRouteRoute = PathlessAuthLayoutRouteImport.update({
-  id: '/_pathlessAuthLayout',
+const AppRouteRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -42,10 +43,10 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const PathlessAuthLayoutHomeRoute = PathlessAuthLayoutHomeImport.update({
-  id: '/home',
-  path: '/home',
-  getParentRoute: () => PathlessAuthLayoutRouteRoute,
+const AppIndexRoute = AppIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -59,11 +60,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/_pathlessAuthLayout': {
-      id: '/_pathlessAuthLayout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof PathlessAuthLayoutRouteImport
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -80,82 +81,73 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
-    '/_pathlessAuthLayout/home': {
-      id: '/_pathlessAuthLayout/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof PathlessAuthLayoutHomeImport
-      parentRoute: typeof PathlessAuthLayoutRouteImport
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexImport
+      parentRoute: typeof AppRouteImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface PathlessAuthLayoutRouteRouteChildren {
-  PathlessAuthLayoutHomeRoute: typeof PathlessAuthLayoutHomeRoute
+interface AppRouteRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
 }
 
-const PathlessAuthLayoutRouteRouteChildren: PathlessAuthLayoutRouteRouteChildren =
-  {
-    PathlessAuthLayoutHomeRoute: PathlessAuthLayoutHomeRoute,
-  }
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+}
 
-const PathlessAuthLayoutRouteRouteWithChildren =
-  PathlessAuthLayoutRouteRoute._addFileChildren(
-    PathlessAuthLayoutRouteRouteChildren,
-  )
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '': typeof PathlessAuthLayoutRouteRouteWithChildren
+  '/app': typeof AppRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/home': typeof PathlessAuthLayoutHomeRoute
+  '/app/': typeof AppIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '': typeof PathlessAuthLayoutRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/home': typeof PathlessAuthLayoutHomeRoute
+  '/app': typeof AppIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/_pathlessAuthLayout': typeof PathlessAuthLayoutRouteRouteWithChildren
+  '/app': typeof AppRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/_pathlessAuthLayout/home': typeof PathlessAuthLayoutHomeRoute
+  '/app/': typeof AppIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/login' | '/register' | '/home'
+  fullPaths: '/' | '/app' | '/login' | '/register' | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/login' | '/register' | '/home'
-  id:
-    | '__root__'
-    | '/'
-    | '/_pathlessAuthLayout'
-    | '/login'
-    | '/register'
-    | '/_pathlessAuthLayout/home'
+  to: '/' | '/login' | '/register' | '/app'
+  id: '__root__' | '/' | '/app' | '/login' | '/register' | '/app/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  PathlessAuthLayoutRouteRoute: typeof PathlessAuthLayoutRouteRouteWithChildren
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  PathlessAuthLayoutRouteRoute: PathlessAuthLayoutRouteRouteWithChildren,
+  AppRouteRoute: AppRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
 }
@@ -171,7 +163,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/_pathlessAuthLayout",
+        "/app",
         "/login",
         "/register"
       ]
@@ -179,10 +171,10 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
-    "/_pathlessAuthLayout": {
-      "filePath": "_pathlessAuthLayout/route.tsx",
+    "/app": {
+      "filePath": "app/route.tsx",
       "children": [
-        "/_pathlessAuthLayout/home"
+        "/app/"
       ]
     },
     "/login": {
@@ -191,9 +183,9 @@ export const routeTree = rootRoute
     "/register": {
       "filePath": "register.tsx"
     },
-    "/_pathlessAuthLayout/home": {
-      "filePath": "_pathlessAuthLayout/home.tsx",
-      "parent": "/_pathlessAuthLayout"
+    "/app/": {
+      "filePath": "app/index.tsx",
+      "parent": "/app"
     }
   }
 }
