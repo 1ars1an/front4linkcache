@@ -39,6 +39,7 @@ export const formSchema = z.object({
     .or(z.literal('')), //allows these fields to accept empty strings,
   // which is important because form inputs often return empty strings when left unfilled.
 });
+
 export function AuthForm({
   displayEmail,
   onSubmit,

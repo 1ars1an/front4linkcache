@@ -33,7 +33,7 @@
   - [] login form
     - [x] form setup
     - [] handle form errors from backend
-    - [] redirect to index
+    - [x] redirect to index
   - [] register form
     - [x] form setup
     - [] handle form errors from backend
@@ -48,7 +48,7 @@
 
 - [] **public, private link cache**
 
-  - [] authenticated routes
+  - [x] authenticated routes
   - [] select public / private
 
 - out of scope:

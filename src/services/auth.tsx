@@ -3,6 +3,7 @@ import axios from 'axios';
 
 export interface AuthContext {
   isAuthenticated: boolean;
+  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   registerUser: (
     userData: userRegisterData
   ) => Promise<string | Error>;
@@ -17,8 +18,8 @@ export interface userData {
 }
 
 export interface userRegisterData extends userData {
-  email: string;
-  confirmPassword: string;
+  email?: string;
+  confirmPassword?: string;
 }
 
 const AuthContext = React.createContext<AuthContext | null>(null);
@@ -177,7 +178,12 @@ export function AuthProvider({
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, registerUser, loginUser }}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        registerUser,
+        loginUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

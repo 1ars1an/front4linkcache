@@ -1,11 +1,14 @@
 import React from 'react';
-import { createFileRoute } from '@tanstack/react-router';
-import { AuthForm } from '../components/Authform';
+import {
+  createFileRoute,
+  useSearch,
+  useRouter,
+  useRouteContext,
+} from '@tanstack/react-router';
+import { AuthForm, formSchema } from '../components/Authform';
 
 import { z } from 'zod';
-import { formSchema } from '../components/Authform';
 
-import { useRouteContext } from '@tanstack/react-router';
 import type { AuthContext } from '../services/auth';
 
 export const Route = createFileRoute('/login')({
@@ -22,15 +25,19 @@ function LoginForm() {
     from: '/login',
   }).auth;
 
-  async function onSubmit(values: z.infer<typeof credentialsSchema>) {
-    console.log('i ran');
+  const search = useSearch('/login');
+  const router = useRouter();
 
+  async function onSubmit(values: z.infer<typeof credentialsSchema>) {
     try {
       const loggedIn = await auth.loginUser({
         username: values.username,
         password: values.password,
       });
-      console.log(loggedIn);
+
+      auth.setIsAuthenticated(true);
+      const redirectTo = search.redirect || '/app/';
+      router.history.push(redirectTo);
     } catch (error) {
       console.log(`error in form call - ${error}`);
     }

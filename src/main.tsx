@@ -7,6 +7,7 @@ import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 
 import { useAuth, AuthProvider } from './services/auth.tsx';
+import type { AuthContext } from './services/auth.tsx';
 
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
@@ -14,7 +15,7 @@ import reportWebVitals from './reportWebVitals.ts';
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: { auth: undefined! },
+  context: { auth: {} },
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultStructuralSharing: true,
@@ -29,7 +30,7 @@ declare module '@tanstack/react-router' {
 }
 
 function InnerApp() {
-  const auth = useAuth();
+  const auth: AuthContext = useAuth();
   return <RouterProvider router={router} context={{ auth }} />;
 }
 

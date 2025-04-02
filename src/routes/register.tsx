@@ -1,11 +1,13 @@
 import React from 'react';
-import { createFileRoute } from '@tanstack/react-router';
-import { AuthForm } from '../components/Authform';
+import {
+  createFileRoute,
+  useRouteContext,
+  useRouter,
+} from '@tanstack/react-router';
+import { AuthForm, formSchema } from '../components/Authform';
 
 import { z } from 'zod';
-import { formSchema } from '../components/Authform';
 
-import { useRouteContext } from '@tanstack/react-router';
 import type { AuthContext } from '../services/auth';
 
 export const Route = createFileRoute('/register')({
@@ -16,6 +18,8 @@ function RegisterForm() {
   const auth: AuthContext = useRouteContext({
     from: '/register',
   }).auth;
+
+  const router = useRouter();
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
