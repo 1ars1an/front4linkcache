@@ -13,7 +13,9 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as RegisterImport } from './routes/register'
 import { Route as LoginImport } from './routes/login'
+import { Route as PathlessAuthLayoutRouteImport } from './routes/_pathlessAuthLayout/route'
 import { Route as IndexImport } from './routes/index'
+import { Route as PathlessAuthLayoutHomeImport } from './routes/_pathlessAuthLayout/home'
 
 // Create/Update Routes
 
@@ -29,10 +31,21 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const PathlessAuthLayoutRouteRoute = PathlessAuthLayoutRouteImport.update({
+  id: '/_pathlessAuthLayout',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const PathlessAuthLayoutHomeRoute = PathlessAuthLayoutHomeImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => PathlessAuthLayoutRouteRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -44,6 +57,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/_pathlessAuthLayout': {
+      id: '/_pathlessAuthLayout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PathlessAuthLayoutRouteImport
       parentRoute: typeof rootRoute
     }
     '/login': {
@@ -60,47 +80,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
+    '/_pathlessAuthLayout/home': {
+      id: '/_pathlessAuthLayout/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof PathlessAuthLayoutHomeImport
+      parentRoute: typeof PathlessAuthLayoutRouteImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface PathlessAuthLayoutRouteRouteChildren {
+  PathlessAuthLayoutHomeRoute: typeof PathlessAuthLayoutHomeRoute
+}
+
+const PathlessAuthLayoutRouteRouteChildren: PathlessAuthLayoutRouteRouteChildren =
+  {
+    PathlessAuthLayoutHomeRoute: PathlessAuthLayoutHomeRoute,
+  }
+
+const PathlessAuthLayoutRouteRouteWithChildren =
+  PathlessAuthLayoutRouteRoute._addFileChildren(
+    PathlessAuthLayoutRouteRouteChildren,
+  )
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '': typeof PathlessAuthLayoutRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/home': typeof PathlessAuthLayoutHomeRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '': typeof PathlessAuthLayoutRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/home': typeof PathlessAuthLayoutHomeRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
+  '/_pathlessAuthLayout': typeof PathlessAuthLayoutRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/_pathlessAuthLayout/home': typeof PathlessAuthLayoutHomeRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register'
+  fullPaths: '/' | '' | '/login' | '/register' | '/home'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register'
-  id: '__root__' | '/' | '/login' | '/register'
+  to: '/' | '' | '/login' | '/register' | '/home'
+  id:
+    | '__root__'
+    | '/'
+    | '/_pathlessAuthLayout'
+    | '/login'
+    | '/register'
+    | '/_pathlessAuthLayout/home'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PathlessAuthLayoutRouteRoute: typeof PathlessAuthLayoutRouteRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PathlessAuthLayoutRouteRoute: PathlessAuthLayoutRouteRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
 }
@@ -116,6 +171,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
+        "/_pathlessAuthLayout",
         "/login",
         "/register"
       ]
@@ -123,11 +179,21 @@ export const routeTree = rootRoute
     "/": {
       "filePath": "index.tsx"
     },
+    "/_pathlessAuthLayout": {
+      "filePath": "_pathlessAuthLayout/route.tsx",
+      "children": [
+        "/_pathlessAuthLayout/home"
+      ]
+    },
     "/login": {
       "filePath": "login.tsx"
     },
     "/register": {
       "filePath": "register.tsx"
+    },
+    "/_pathlessAuthLayout/home": {
+      "filePath": "_pathlessAuthLayout/home.tsx",
+      "parent": "/_pathlessAuthLayout"
     }
   }
 }
