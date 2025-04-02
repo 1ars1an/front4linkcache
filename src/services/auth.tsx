@@ -6,7 +6,7 @@ export interface AuthContext {
   registerUser: (
     userData: userRegisterData
   ) => Promise<string | Error>;
-  login: (username: string) => Promise<string | Error>;
+  loginUser: (userData: userData) => Promise<string | Error>;
   logout: () => Promise<void>;
   user: string | null;
 }
@@ -103,6 +103,64 @@ export const registerUser = async (userData: userRegisterData) => {
   }
 };
 
+export const loginUser = async (userData: userData) => {
+  const REGISTRATION_ENDPOINT = '/login/';
+
+  try {
+    console.debug(
+      `Attempting registration at ${apiAuthClient.defaults.baseURL}${REGISTRATION_ENDPOINT} with data:`,
+      userData
+    );
+
+    const response = await apiAuthClient.post(
+      REGISTRATION_ENDPOINT,
+      userData
+    );
+
+    console.debug(
+      'Login successful. Status:',
+      response.status,
+      'Data:',
+      response.data
+    );
+
+    return response.data.key;
+  } catch (error) {
+    console.error('Login failed:', error);
+
+    if (error.response) {
+      const status = error.response.status;
+      const responseData = error.response.data;
+      const errorMessage = `Login failed with status ${status}. ${
+        JSON.stringify(responseData) ||
+        'Server responded with an error.'
+      }`;
+
+      console.error(`API Error: ${status}`, responseData);
+
+      const apiError = new Error(errorMessage) as Error & {
+        response?: any; //type assertion to extend error to include response
+      };
+      apiError.response = error.response;
+      throw apiError;
+    } else if (error.request) {
+      console.error(
+        'Network Error: No response received.',
+        error.request
+      );
+      throw new Error(
+        'Unable to connect to the server. Please check your network connection and try again.'
+      );
+    } else {
+      console.error('Axios Setup Error:', error.message);
+
+      throw new Error(
+        `An unexpected error occurred while setting up the registration request: ${error.message}`
+      );
+    }
+  }
+};
+
 export function AuthProvider({
   children,
 }: {
@@ -118,7 +176,9 @@ export function AuthProvider({
   ) => {};
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, registerUser }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, registerUser, loginUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

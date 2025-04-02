@@ -31,7 +31,7 @@
 - [] **login, register pages**
 
   - [] login form
-    - [] form setup
+    - [x] form setup
     - [] handle form errors from backend
     - [] redirect to index
   - [] register form
@@ -39,7 +39,12 @@
     - [] handle form errors from backend
     - [] redirect to index with created session? look into how this works
   - [x] auth context + provider
-    - [] login, register calls
+
+    - [x] login, register calls
+
+- [] **logout action ui**
+
+  - [] logout api call
 
 - out of scope:
   - spotify/youtube embedded components for relevant links
