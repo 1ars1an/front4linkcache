@@ -8,8 +8,7 @@ export interface AuthContext {
     userData: userRegisterData
   ) => Promise<string | Error>;
   loginUser: (userData: userData) => Promise<string | Error>;
-  logout: () => Promise<void>;
-  user: string | null;
+  logoutUser: () => Promise<void>;
 }
 
 export interface userData {
@@ -162,6 +161,56 @@ export const loginUser = async (userData: userData) => {
   }
 };
 
+export const logoutUser = async () => {
+  const REGISTRATION_ENDPOINT = '/logout/';
+
+  try {
+    const response = await apiAuthClient.post(REGISTRATION_ENDPOINT);
+
+    console.debug(
+      'Login successful. Status:',
+      response.status,
+      'Data:',
+      response.data
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Login failed:', error);
+
+    if (error.response) {
+      const status = error.response.status;
+      const responseData = error.response.data;
+      const errorMessage = `Login failed with status ${status}. ${
+        JSON.stringify(responseData) ||
+        'Server responded with an error.'
+      }`;
+
+      console.error(`API Error: ${status}`, responseData);
+
+      const apiError = new Error(errorMessage) as Error & {
+        response?: any; //type assertion to extend error to include response
+      };
+      apiError.response = error.response;
+      throw apiError;
+    } else if (error.request) {
+      console.error(
+        'Network Error: No response received.',
+        error.request
+      );
+      throw new Error(
+        'Unable to connect to the server. Please check your network connection and try again.'
+      );
+    } else {
+      console.error('Axios Setup Error:', error.message);
+
+      throw new Error(
+        `An unexpected error occurred while setting up the registration request: ${error.message}`
+      );
+    }
+  }
+};
+
 export function AuthProvider({
   children,
 }: {
@@ -183,6 +232,7 @@ export function AuthProvider({
         setIsAuthenticated,
         registerUser,
         loginUser,
+        logoutUser,
       }}
     >
       {children}

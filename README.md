@@ -42,9 +42,10 @@
 
     - [x] login, register calls
 
-- [] **logout action ui**
+- [] **logout**
 
-  - [] logout api call
+  - [x] logout api call
+  - [] logout action ui
 
 - [] **public, private link cache**
 
