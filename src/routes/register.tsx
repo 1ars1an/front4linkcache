@@ -9,6 +9,7 @@ import { AuthForm, formSchema } from '../components/Authform';
 import { z } from 'zod';
 
 import type { AuthContext } from '../services/auth';
+import { storeJson } from '../lib/utils';
 
 export const Route = createFileRoute('/register')({
   component: RegisterForm,
@@ -30,11 +31,13 @@ function RegisterForm() {
         confirmPassword: values.confirmPassword,
       });
       console.log(isRegistered);
+      auth.setIsAuthenticated(true);
+      storeJson('authToken', isRegistered as string);
+      router.history.push('/app/');
     } catch (error) {
       console.log(`error in form call - ${error}`);
     }
   }
-
   return (
     <div className="">
       <div className="flex justify-center items-center">

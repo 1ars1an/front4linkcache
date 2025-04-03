@@ -10,6 +10,7 @@ import { AuthForm, formSchema } from '../components/Authform';
 import { z } from 'zod';
 
 import type { AuthContext } from '../services/auth';
+import { storeJson } from '../lib/utils';
 
 export const Route = createFileRoute('/login')({
   component: LoginForm,
@@ -36,6 +37,7 @@ function LoginForm() {
       });
 
       auth.setIsAuthenticated(true);
+      storeJson('authToken', loggedIn as string);
       const redirectTo = search.redirect || '/app/';
       router.history.push(redirectTo);
     } catch (error) {
