@@ -9,6 +9,13 @@ import { routeTree } from './routeTree.gen';
 import { useAuth, AuthProvider } from './services/auth.tsx';
 import type { AuthContext } from './services/auth.tsx';
 
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
 
@@ -48,7 +55,9 @@ if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <App></App>
+      <QueryClientProvider client={queryClient}>
+        <App></App>
+      </QueryClientProvider>
     </StrictMode>
   );
 }
