@@ -3,6 +3,7 @@ import React from 'react';
 import type { AuthContext } from '../../services/auth';
 import {
   createFileRoute,
+  useLoaderData,
   useRouteContext,
 } from '@tanstack/react-router';
 
@@ -13,16 +14,10 @@ import {
   getUserFolder,
 } from '../../services/requests';
 
+import LibraryGrid from '../../components/LibraryGrid';
+
 export const Route = createFileRoute('/app/')({
   component: RouteComponent,
-  beforeLoad: async () => {
-    try {
-      const response = await getAllUserFolders();
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  },
 });
 
 function RouteComponent() {
@@ -30,5 +25,20 @@ function RouteComponent() {
     from: '/app/',
   }).auth;
 
-  return <div>Hi</div>;
+  const { data, isPending } = useQuery({
+    queryKey: ['folders'],
+    queryFn: getAllUserFolders,
+  });
+
+  return (
+    <>
+      <div>
+        {isPending ? (
+          <div>Loading</div>
+        ) : (
+          <LibraryGrid folders={data} />
+        )}
+      </div>
+    </>
+  );
 }

@@ -15,6 +15,14 @@ export class ApiError extends Error {
   }
 }
 
+export interface userFolder {
+  id: number;
+  name: string;
+  user: number;
+  created_at: string;
+  updated_at: string;
+}
+
 const apiDataClient = axios.create({
   baseURL: 'http://127.0.0.1:8000/api/',
   withCredentials: true,
@@ -22,6 +30,8 @@ const apiDataClient = axios.create({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'X-CSRFToken',
 });
 
 apiDataClient.interceptors.response.use(
@@ -63,7 +73,7 @@ apiDataClient.interceptors.response.use(
   }
 );
 
-export const getAllUserFolders = async () => {
+export const getAllUserFolders = async (): Promise<userFolder[]> => {
   const DATA_ENDPOINT = 'folders';
 
   try {

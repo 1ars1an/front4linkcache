@@ -45,6 +45,8 @@ const apiAuthClient = axios.create({
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
+  xsrfCookieName: 'csrftoken',
+  xsrfHeaderName: 'X-CSRFToken',
 });
 
 apiAuthClient.interceptors.response.use(
