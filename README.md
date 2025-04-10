@@ -79,7 +79,5 @@
 
   - 09.05
 
-    -
-
   - out of scope:
     - spotify/youtube embedded components for relevant links

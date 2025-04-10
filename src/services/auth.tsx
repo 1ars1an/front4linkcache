@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
 export interface AuthContext {
   isAuthenticated: boolean;
@@ -21,6 +21,21 @@ export interface userRegisterData extends userData {
   confirmPassword?: string;
 }
 
+export interface ApiErrorResponse {
+  status: number;
+  data: any;
+}
+
+export class ApiError extends Error {
+  response?: ApiErrorResponse;
+
+  constructor(message: string, response?: ApiErrorResponse) {
+    super(message);
+    this.name = 'ApiError'; // custom error name
+    this.response = response;
+  }
+}
+
 const AuthContext = React.createContext<AuthContext | null>(null);
 
 const apiAuthClient = axios.create({
@@ -30,6 +45,45 @@ const apiAuthClient = axios.create({
     Accept: 'application/json',
   },
 });
+
+apiAuthClient.interceptors.response.use(
+  (response) => response, //success, pass response directly
+  (error: AxiosError) => {
+    console.error('API Call Failed via Interceptor:', error); //log raw error
+
+    if (error.response) {
+      const status = error.response.status;
+      const responseData = error.response.data;
+      const errorMessage = `Request failed with status ${status}. ${
+        JSON.stringify(responseData) ||
+        'Server responded with an error.'
+      }`;
+
+      console.error(`API Error: ${status}`, responseData);
+
+      // create and throw custom, structured error
+      const apiError = new ApiError(errorMessage, {
+        status,
+        data: responseData,
+      });
+      // we are throwing the error here, so the original promise from the axios call will reject with THIS error.
+      throw apiError;
+    } else if (error.request) {
+      console.error(
+        'Network Error: No response received.',
+        error.request
+      );
+      throw new Error(
+        'Unable to connect to the server. Please check your network connection and try again.'
+      );
+    } else {
+      console.error('Axios Setup Error:', error.message);
+      throw new Error(
+        `An unexpected error occurred while setting up the request: ${error.message}`
+      );
+    }
+  }
+);
 
 export const registerUser = async (userData: userRegisterData) => {
   const REGISTRATION_ENDPOINT = '/registration/';
@@ -62,44 +116,9 @@ export const registerUser = async (userData: userRegisterData) => {
 
     return response.data.key;
   } catch (error) {
-    // logging the raw error object for detailed debugging.
-    console.error('Registration failed:', error);
-
-    if (error.response) {
-      const status = error.response.status;
-      const responseData = error.response.data;
-      const errorMessage = `Registration failed with status ${status}. ${
-        JSON.stringify(responseData) ||
-        'Server responded with an error.'
-      }`;
-
-      console.error(`API Error: ${status}`, responseData);
-
-      const apiError = new Error(errorMessage) as Error & {
-        response?: any; //type assertion to extend error to include response
-      };
-      // attaching original axios error response to the new error object.
-      // gives access to detailed errors (specific validation field errors)
-      apiError.response = error.response;
-      throw apiError;
-    } else if (error.request) {
-      console.error(
-        'Network Error: No response received.',
-        error.request
-      );
-      throw new Error(
-        'Unable to connect to the server. Please check your network connection and try again.'
-      );
-    } else {
-      // --- setup error ---
-      // something went wrong in setting up the request that triggered an error
-      // (e.g., error in an Axios interceptor, invalid configuration)
-      console.error('Axios Setup Error:', error.message);
-
-      throw new Error(
-        `An unexpected error occurred while setting up the registration request: ${error.message}`
-      );
-    }
+    // error thrown here likely caught by interceptor
+    console.error('Context: Registration failed:', error); //log for functions's context
+    throw error; //rethrow so calling code handles it
   }
 };
 
@@ -126,38 +145,8 @@ export const loginUser = async (userData: userData) => {
 
     return response.data.key;
   } catch (error) {
-    console.error('Login failed:', error);
-
-    if (error.response) {
-      const status = error.response.status;
-      const responseData = error.response.data;
-      const errorMessage = `Login failed with status ${status}. ${
-        JSON.stringify(responseData) ||
-        'Server responded with an error.'
-      }`;
-
-      console.error(`API Error: ${status}`, responseData);
-
-      const apiError = new Error(errorMessage) as Error & {
-        response?: any; //type assertion to extend error to include response
-      };
-      apiError.response = error.response;
-      throw apiError;
-    } else if (error.request) {
-      console.error(
-        'Network Error: No response received.',
-        error.request
-      );
-      throw new Error(
-        'Unable to connect to the server. Please check your network connection and try again.'
-      );
-    } else {
-      console.error('Axios Setup Error:', error.message);
-
-      throw new Error(
-        `An unexpected error occurred while setting up the registration request: ${error.message}`
-      );
-    }
+    console.error('Context: Login failed:', error);
+    throw error;
   }
 };
 
@@ -176,38 +165,8 @@ export const logoutUser = async () => {
 
     return response.data;
   } catch (error) {
-    console.error('Login failed:', error);
-
-    if (error.response) {
-      const status = error.response.status;
-      const responseData = error.response.data;
-      const errorMessage = `Login failed with status ${status}. ${
-        JSON.stringify(responseData) ||
-        'Server responded with an error.'
-      }`;
-
-      console.error(`API Error: ${status}`, responseData);
-
-      const apiError = new Error(errorMessage) as Error & {
-        response?: any; //type assertion to extend error to include response
-      };
-      apiError.response = error.response;
-      throw apiError;
-    } else if (error.request) {
-      console.error(
-        'Network Error: No response received.',
-        error.request
-      );
-      throw new Error(
-        'Unable to connect to the server. Please check your network connection and try again.'
-      );
-    } else {
-      console.error('Axios Setup Error:', error.message);
-
-      throw new Error(
-        `An unexpected error occurred while setting up the registration request: ${error.message}`
-      );
-    }
+    console.error('Context: Login failed:', error);
+    throw error;
   }
 };
 
@@ -218,12 +177,6 @@ export function AuthProvider({
 }) {
   const [isAuthenticated, setIsAuthenticated] =
     React.useState<boolean>(false);
-
-  const register = async (
-    username: string,
-    email: string,
-    password: string
-  ) => {};
 
   return (
     <AuthContext.Provider
