@@ -39,7 +39,8 @@ export class ApiError extends Error {
 const AuthContext = React.createContext<AuthContext | null>(null);
 
 const apiAuthClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000/auth',
+  baseURL: 'http://127.0.0.1:8000/auth/',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -86,7 +87,7 @@ apiAuthClient.interceptors.response.use(
 );
 
 export const registerUser = async (userData: userRegisterData) => {
-  const REGISTRATION_ENDPOINT = '/registration/';
+  const REGISTRATION_ENDPOINT = 'registration/';
 
   const requestUserData = {
     username: userData.username,
@@ -123,7 +124,7 @@ export const registerUser = async (userData: userRegisterData) => {
 };
 
 export const loginUser = async (userData: userData) => {
-  const REGISTRATION_ENDPOINT = '/login/';
+  const REGISTRATION_ENDPOINT = 'login/';
 
   try {
     console.debug(
@@ -151,7 +152,7 @@ export const loginUser = async (userData: userData) => {
 };
 
 export const logoutUser = async () => {
-  const REGISTRATION_ENDPOINT = '/logout/';
+  const REGISTRATION_ENDPOINT = 'logout/';
 
   try {
     const response = await apiAuthClient.post(REGISTRATION_ENDPOINT);

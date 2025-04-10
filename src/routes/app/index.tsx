@@ -6,8 +6,23 @@ import {
   useRouteContext,
 } from '@tanstack/react-router';
 
+import { useQuery } from '@tanstack/react-query';
+
+import {
+  getAllUserFolders,
+  getUserFolder,
+} from '../../services/requests';
+
 export const Route = createFileRoute('/app/')({
   component: RouteComponent,
+  beforeLoad: async () => {
+    try {
+      const response = await getAllUserFolders();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  },
 });
 
 function RouteComponent() {
