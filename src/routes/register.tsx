@@ -31,7 +31,6 @@ function RegisterForm() {
         confirmPassword: values.confirmPassword,
       });
       console.log(isRegistered);
-      auth.setIsAuthenticated(true);
       storeJson('authToken', isRegistered as string);
       router.history.push('/app/');
     } catch (error) {

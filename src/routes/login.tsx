@@ -36,7 +36,6 @@ function LoginForm() {
         password: values.password,
       });
 
-      auth.setIsAuthenticated(true);
       storeJson('authToken', loggedIn as string);
       const redirectTo = search.redirect || '/app/';
       router.history.push(redirectTo);

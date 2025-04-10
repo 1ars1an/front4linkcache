@@ -1,15 +1,15 @@
 import React from 'react';
 import axios from 'axios';
+import type { AxiosResponse } from 'axios';
 import { commonErrorHandler } from './apiError';
 
 export interface AuthContext {
-  isAuthenticated: boolean;
-  setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
   registerUser: (
     userData: userRegisterData
   ) => Promise<string | Error>;
   loginUser: (userData: userData) => Promise<string | Error>;
   logoutUser: () => Promise<void>;
+  isAuthenticated: () => Promise<AxiosResponse<any, any>>;
 }
 
 export interface userData {
@@ -78,16 +78,16 @@ export const registerUser = async (userData: userRegisterData) => {
 };
 
 export const loginUser = async (userData: userData) => {
-  const REGISTRATION_ENDPOINT = 'login/';
+  const LOGIN_ENDPOINT = 'login/';
 
   try {
     console.debug(
-      `Attempting registration at ${apiAuthClient.defaults.baseURL}${REGISTRATION_ENDPOINT} with data:`,
+      `Attempting registration at ${apiAuthClient.defaults.baseURL}${LOGIN_ENDPOINT} with data:`,
       userData
     );
 
     const response = await apiAuthClient.post(
-      REGISTRATION_ENDPOINT,
+      LOGIN_ENDPOINT,
       userData
     );
 
@@ -98,7 +98,7 @@ export const loginUser = async (userData: userData) => {
       response.data
     );
 
-    return response.data.key;
+    return response.data.key as string;
   } catch (error) {
     console.error('Context: Login failed:', error);
     throw error;
@@ -106,10 +106,10 @@ export const loginUser = async (userData: userData) => {
 };
 
 export const logoutUser = async () => {
-  const REGISTRATION_ENDPOINT = 'logout/';
+  const LOGOUT_ENDPOINT = 'logout/';
 
   try {
-    const response = await apiAuthClient.post(REGISTRATION_ENDPOINT);
+    const response = await apiAuthClient.post(LOGOUT_ENDPOINT);
 
     console.debug(
       'Login successful. Status:',
@@ -125,22 +125,29 @@ export const logoutUser = async () => {
   }
 };
 
+export const isAuthenticated = async () => {
+  const AUTH_ENDPOINT = 'user/';
+  try {
+    const response = await apiAuthClient.get(AUTH_ENDPOINT);
+    return response;
+  } catch (error) {
+    console.error('Context: Auth failed:', error);
+    throw error;
+  }
+};
+
 export function AuthProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isAuthenticated, setIsAuthenticated] =
-    React.useState<boolean>(false);
-
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated,
-        setIsAuthenticated,
         registerUser,
         loginUser,
         logoutUser,
+        isAuthenticated,
       }}
     >
       {children}
