@@ -60,3 +60,21 @@ export const getUserFolder = async (id: number) => {
     throw error;
   }
 };
+
+export const getTopUserLinks = async (id: number) => {
+  const DATA_ENDPOINT = `folders/retrieve/${id}`;
+
+  try {
+    const response = await apiDataClient.get(DATA_ENDPOINT);
+    console.debug(
+      "Folder's top links request successful. Status:",
+      response.status,
+      'Data:',
+      response.data
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Context: Folder request failed:', error);
+    throw error;
+  }
+};

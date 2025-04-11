@@ -3,7 +3,7 @@ import React from 'react';
 import type { userFolder } from '../../services/requests';
 
 import { Button } from './ui/button';
-import FolderPopup from './ui/FolderPopup';
+import FolderPopup from './FolderPopup';
 
 import { Link } from '@tanstack/react-router';
 
