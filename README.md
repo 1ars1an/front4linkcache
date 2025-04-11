@@ -58,12 +58,13 @@
 
   - [] **library ui**
 
-    - [] grids + shelves
-    - [] query to retrieve user folders data
+    - [x] grids + shelves
+    - [x] query to retrieve user folders data
+    - [] popup for mini-folder data
 
   - [] **folder ui**
 
-    - [] query to retrieve folder data
+    - [x] query to retrieve folder data
     - [] filter cards
       - [] sorting options?
       - [] tags
@@ -77,7 +78,12 @@
 
 - ## workspace
 
-  - 09.05
+  - 10.05
+
+    - refactor error handling, auth validity check
+    - retrieve user folder data
+    - library grid v1
+    - library grid design v1
 
   - out of scope:
     - spotify/youtube embedded components for relevant links

@@ -32,7 +32,7 @@ function RouteComponent() {
 
   return (
     <>
-      <div>
+      <div className="flex flex-col items-center">
         {isPending ? (
           <div>Loading</div>
         ) : (
