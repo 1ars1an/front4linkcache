@@ -1,12 +1,40 @@
 import axios from 'axios';
 import { commonErrorHandler } from './apiError';
 
+export interface paginatedData {
+  count: number;
+  next: string | null;
+  previous: string | null;
+}
+
 export interface userFolder {
   id: number;
   name: string;
   user: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface tags {
+  id: number;
+  name: string;
+  user: number;
+}
+
+export interface userFolderLinks {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+  tags: tags[];
+}
+
+export interface paginatedFolderData extends paginatedData {
+  results: userFolder[];
+}
+
+export interface paginatedLinkData extends paginatedData {
+  results: userFolderLinks[];
 }
 
 const apiDataClient = axios.create({
@@ -25,8 +53,10 @@ apiDataClient.interceptors.response.use(
   commonErrorHandler
 );
 
-export const getAllUserFolders = async (): Promise<userFolder[]> => {
-  const DATA_ENDPOINT = 'folders';
+export const getAllUserFolders = async (
+  page: number = 1
+): Promise<paginatedFolderData> => {
+  const DATA_ENDPOINT = `folders?page=${page}`;
 
   try {
     const response = await apiDataClient.get(DATA_ENDPOINT);

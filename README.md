@@ -60,7 +60,7 @@
 
     - [x] grids + shelves
     - [x] query to retrieve user folders data
-    - [] popup for mini-folder data
+    - [x] popup for mini-folder data
 
   - [] **folder ui**
 
@@ -84,6 +84,10 @@
     - retrieve user folder data
     - library grid v1
     - library grid design v1
+
+  - 11.05
+
+    - popup for folder containing top 5 links: design + ui
 
   - out of scope:
     - spotify/youtube embedded components for relevant links

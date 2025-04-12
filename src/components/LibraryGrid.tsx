@@ -1,22 +1,31 @@
 import React from 'react';
 
-import type { userFolder } from '../../services/requests';
+import type {
+  paginatedFolderData,
+  userFolder,
+} from '../services/requests';
 
 import { Button } from './ui/button';
 import FolderPopup from './FolderPopup';
 
 import { Link } from '@tanstack/react-router';
 
-type Props = {
-  folders: userFolder[];
+type LibraryGridProps = {
+  apiData: paginatedFolderData;
+  pageId: number;
 };
 
-export default function LibraryGrid({ folders }: Props) {
+export default function LibraryGrid({
+  apiData,
+  pageId,
+}: LibraryGridProps) {
   const [openCardId, setOpenCardId] = React.useState<number | null>(
     null
   );
 
-  console.log(folders);
+  console.log(apiData);
+
+  const folders = apiData.results;
 
   const toggleCard = (id: number | null) => {
     setOpenCardId(openCardId === id ? null : id);

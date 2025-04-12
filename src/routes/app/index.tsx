@@ -14,6 +14,8 @@ import {
   getUserFolder,
 } from '../../services/requests';
 
+import type { paginatedFolderData } from '../../services/requests';
+
 import LibraryGrid from '../../components/LibraryGrid';
 
 export const Route = createFileRoute('/app/')({
@@ -21,13 +23,11 @@ export const Route = createFileRoute('/app/')({
 });
 
 function RouteComponent() {
-  const auth: AuthContext = useRouteContext({
-    from: '/app/',
-  }).auth;
+  const [pageId, setPageId] = React.useState<number>(1);
 
   const { data, isPending } = useQuery({
-    queryKey: ['folders'],
-    queryFn: getAllUserFolders,
+    queryKey: ['folders', `${pageId}`],
+    queryFn: () => getAllUserFolders(pageId),
   });
 
   return (
@@ -36,7 +36,11 @@ function RouteComponent() {
         {isPending ? (
           <div>Loading</div>
         ) : (
-          <LibraryGrid folders={data} />
+          <LibraryGrid
+            apiData={data as paginatedFolderData}
+            pageId={pageId}
+            setPageId={setPageId}
+          />
         )}
       </div>
     </>

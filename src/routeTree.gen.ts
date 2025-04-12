@@ -16,6 +16,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/app/route'
 import { Route as IndexImport } from './routes/index'
 import { Route as AppIndexImport } from './routes/app/index'
+import { Route as AppFIdImport } from './routes/app/$fId'
 
 // Create/Update Routes
 
@@ -46,6 +47,12 @@ const IndexRoute = IndexImport.update({
 const AppIndexRoute = AppIndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+
+const AppFIdRoute = AppFIdImport.update({
+  id: '/$fId',
+  path: '/$fId',
   getParentRoute: () => AppRouteRoute,
 } as any)
 
@@ -81,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RegisterImport
       parentRoute: typeof rootRoute
     }
+    '/app/$fId': {
+      id: '/app/$fId'
+      path: '/$fId'
+      fullPath: '/app/$fId'
+      preLoaderRoute: typeof AppFIdImport
+      parentRoute: typeof AppRouteImport
+    }
     '/app/': {
       id: '/app/'
       path: '/'
@@ -94,10 +108,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AppRouteRouteChildren {
+  AppFIdRoute: typeof AppFIdRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppFIdRoute: AppFIdRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
@@ -110,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/app/$fId': typeof AppFIdRoute
   '/app/': typeof AppIndexRoute
 }
 
@@ -117,6 +134,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/app/$fId': typeof AppFIdRoute
   '/app': typeof AppIndexRoute
 }
 
@@ -126,15 +144,16 @@ export interface FileRoutesById {
   '/app': typeof AppRouteRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/app/$fId': typeof AppFIdRoute
   '/app/': typeof AppIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/login' | '/register' | '/app/'
+  fullPaths: '/' | '/app' | '/login' | '/register' | '/app/$fId' | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/app'
-  id: '__root__' | '/' | '/app' | '/login' | '/register' | '/app/'
+  to: '/' | '/login' | '/register' | '/app/$fId' | '/app'
+  id: '__root__' | '/' | '/app' | '/login' | '/register' | '/app/$fId' | '/app/'
   fileRoutesById: FileRoutesById
 }
 
@@ -174,6 +193,7 @@ export const routeTree = rootRoute
     "/app": {
       "filePath": "app/route.tsx",
       "children": [
+        "/app/$fId",
         "/app/"
       ]
     },
@@ -182,6 +202,10 @@ export const routeTree = rootRoute
     },
     "/register": {
       "filePath": "register.tsx"
+    },
+    "/app/$fId": {
+      "filePath": "app/$fId.tsx",
+      "parent": "/app"
     },
     "/app/": {
       "filePath": "app/index.tsx",

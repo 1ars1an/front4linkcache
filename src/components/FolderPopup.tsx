@@ -9,14 +9,35 @@ import { getTopUserLinks } from '../services/requests';
 
 export default function FolderPopup({ openCard, setOpenCardId }) {
   const { data, isPending } = useQuery({
-    queryKey: ['topLinks'],
+    queryKey: ['topLinks', `${openCard.id}`],
     queryFn: () => getTopUserLinks(openCard.id),
   });
 
   console.log(data);
 
   return isPending ? (
-    <div>Loading</div>
+    <div className="w-full mb-6 relative overflow-hidden">
+      <div className="relative">
+        <div className="h-12 bg-green-700 rounded-t-lg relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-green-600 to-green-800 opacity-50"></div>
+          <div className="absolute inset-0">
+            {Array.from({ length: 100 }).map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-green-500 opacity-30"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                }}
+              ></div>
+            ))}
+          </div>
+
+          <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-b from-green-800 to-brown-700 opacity-70"></div>
+        </div>
+        <div className="py-8 relative bg-amber-950 rounded-b-lg shadow-inner min-h-64 flex flex-col justify-center"></div>
+      </div>
+    </div>
   ) : (
     <>
       <div className="w-full mb-6 relative overflow-hidden">
