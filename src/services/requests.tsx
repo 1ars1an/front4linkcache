@@ -104,7 +104,27 @@ export const getTopUserLinks = async (id: number) => {
     );
     return response.data;
   } catch (error) {
-    console.error('Context: Folder request failed:', error);
+    console.error('Context: Top Links request failed:', error);
+    throw error;
+  }
+};
+
+export const getAllFolderLinks = async (
+  id: number,
+  page: number = 1
+) => {
+  const DATA_ENDPOINT = `folders/${id}/links?page=${page}`;
+  try {
+    const response = await apiDataClient.get(DATA_ENDPOINT);
+    console.debug(
+      'All folder links request successful. Status:',
+      response.status,
+      'Data:',
+      response.data
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Context: All links request failed:', error);
     throw error;
   }
 };
