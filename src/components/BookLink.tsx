@@ -10,10 +10,12 @@ export default function BookLink({
   link,
   isActive,
   onClick,
+  setActiveEdit,
 }: {
   link: Link; //type this correctly
   isActive: boolean;
   onClick: () => void;
+  setActiveEdit: (value: boolean) => void;
 }) {
   console.log(link);
   return (
@@ -33,7 +35,10 @@ export default function BookLink({
         'rounded-xl border border-purple-800 bg-[#2e1b40]',
         'cursor-pointer text-sm font-semibold  py-2 px-2 text-white'
       )}
-      onClick={onClick}
+      onClick={() => {
+        setActiveEdit(false);
+        onClick();
+      }}
     >
       <div className="flex items-center">
         <div className="mr-auto">{link.name}</div>

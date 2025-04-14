@@ -52,13 +52,6 @@ export function LinkForm() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log('Submitting PATCH:', values);
-
-    // Send a PATCH request to your API
-    fetch('/api/link/17', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(values),
-    });
   }
 
   const { control, setValue } = form;

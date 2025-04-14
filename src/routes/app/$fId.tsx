@@ -66,7 +66,7 @@ function RouteComponent() {
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [selectedBlock, setSelectedBlock] = useState('bookshelf');
-  const [activeEdit, setActiveEdit] = useState<boolean>('false');
+  const [activeEdit, setActiveEdit] = useState<boolean>(false);
 
   const styles = blockStyles[selectedBlock] || blockStyles.obsidian;
 
@@ -75,12 +75,15 @@ function RouteComponent() {
   ) : (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="grid grid-cols-2 w-full max-w-5xl gap-8">
-        <LinkContainer
-          links={data.results}
-          styles={styles}
-          activeIndex={activeIndex}
-          setActiveIndex={setActiveIndex}
-        />
+        <div className="col-start-1 row-span-2 w-full flex items-center justify-center">
+          <LinkContainer
+            links={data.results}
+            styles={styles}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+            setActiveEdit={setActiveEdit}
+          />
+        </div>
         {/* detail block in right column, top row */}
         <div className="col-start-2 row-start-1">
           <motion.div
@@ -132,7 +135,6 @@ function RouteComponent() {
                     >
                       Edit
                     </Button>
-                    <Button>Edit</Button>
                     <Button
                       onClick={() => {
                         navigator.clipboard

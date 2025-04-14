@@ -8,11 +8,15 @@ export default function LinkContainer({
   styles,
   activeIndex,
   setActiveIndex,
+  setActiveEdit,
 }) {
   console.log(links);
   return (
     <div
-      className={cn(styles.bg, 'px-24 py-8 rounded-2xl space-y-2')}
+      className={cn(
+        styles.bg,
+        'px-24 py-8 rounded-2xl space-y-2 w-full'
+      )}
     >
       <div className="bg-[url('/bookshelf.png')] h-20 rounded-t-xl bg-cover" />
       <div className="">
@@ -26,6 +30,7 @@ export default function LinkContainer({
           onClick={() =>
             setActiveIndex(idx === activeIndex ? null : idx)
           }
+          setActiveEdit={setActiveEdit}
         />
       ))}
     </div>

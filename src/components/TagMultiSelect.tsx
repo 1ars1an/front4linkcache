@@ -66,7 +66,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           <CommandInput
             placeholder="Search tags..."
             id={search}
-            onidChange={setSearch}
+            onValueChange={setSearch}
           />
           <CommandList>
             <CommandEmpty>No tags found.</CommandEmpty>
