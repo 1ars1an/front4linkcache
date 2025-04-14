@@ -88,6 +88,7 @@
   - 11.05
 
     - popup for folder containing top 5 links: design + ui
+    - bunch of stuff, i need to categorize this better lol
 
   - out of scope:
     - spotify/youtube embedded components for relevant links

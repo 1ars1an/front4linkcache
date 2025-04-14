@@ -1,8 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createFileRoute, useParams } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 
 import { getAllFolderLinks } from '../../services/requests';
+
+import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+
+import LinkContainer from '../../components/LinkContainer';
 
 export const Route = createFileRoute('/app/$fId')({
   component: RouteComponent,
@@ -13,8 +26,6 @@ function RouteComponent() {
     from: '/app/$fId',
   });
 
-  console.log(fId);
-
   const [page, setPage] = React.useState<number>(1);
   const { data, isPending } = useQuery({
     queryKey: ['allLinks', `${fId}`, `${page}`],
@@ -23,5 +34,79 @@ function RouteComponent() {
 
   console.log(data);
 
-  return isPending ? <div>Loading</div> : <div>RanSuves</div>;
+  const blockStyles: Record<string, { bg: string; border: string }> =
+    {
+      obsidian: {
+        bg: "bg-[url('/obsidian-bg.png')]",
+        border: "url('/obsidian-border.png') 30 stretch",
+      },
+      bookshelf: {
+        bg: "bg-[url('/bookshelf-bg.png')]",
+        border: "url('/bookshelf-border.png') 30 stretch",
+      },
+      glowstone: {
+        bg: "bg-[url('/glowstone-bg.png')]",
+        border: "url('/glowstone-border.png') 30 stretch",
+      },
+    };
+
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [selectedBlock, setSelectedBlock] = useState('bookshelf');
+
+  const styles = blockStyles[selectedBlock] || blockStyles.obsidian;
+
+  return isPending ? (
+    <div>Loading</div>
+  ) : (
+    <div className="flex items-center justify-center">
+      <div className="grid grid-cols-[320px_1fr] grid-rows-[auto_1fr]">
+        {/* Fixed left-side container */}
+        <LinkContainer
+          links={data.results}
+          styles={styles}
+          activeIndex={activeIndex}
+          setActiveIndex={setActiveIndex}
+        />
+        {/* Detail block in right column, top row */}
+        <div className="col-start-2 row-start-1 p-6">
+          <motion.div
+            initial={false}
+            animate={{
+              x: activeIndex !== null ? 0 : -400,
+              opacity: activeIndex !== null ? 1 : 0,
+            }}
+            transition={{
+              type: 'spring',
+              stiffness: 260,
+              damping: 30,
+            }}
+          >
+            {activeIndex !== null && (
+              <div
+                className={cn(
+                  'w-full min-h-[200px] p-6 rounded-xl shadow-inner border text-white',
+                  styles.bg,
+                  'pixel-border'
+                )}
+                style={{
+                  imageRendering: 'pixelated',
+                  borderImage: styles.border,
+                  borderWidth: '8px',
+                  borderStyle: 'solid',
+                }}
+              >
+                <div>
+                  Details for: {data.results[activeIndex].label}
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </div>
+        {/* Placeholder second row */}
+        <div className="col-start-2 row-start-2 p-6">
+          {/* Optional second row content */}
+        </div>
+      </div>
+    </div>
+  );
 }

@@ -13,11 +13,13 @@ import { Link } from '@tanstack/react-router';
 type LibraryGridProps = {
   apiData: paginatedFolderData;
   pageId: number;
+  setPageId: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default function LibraryGrid({
   apiData,
   pageId,
+  setPageId,
 }: LibraryGridProps) {
   const [openCardId, setOpenCardId] = React.useState<number | null>(
     null
