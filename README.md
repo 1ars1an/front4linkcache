@@ -68,10 +68,16 @@
     - [] filter cards
       - [] sorting options?
       - [] tags
+    - [] add composable styles
 
-  - [] **link card ui**
+    - [] **link container ui**
 
-    - [] query to retrieve link card data
+      - [x] base style
+      - [] container style
+      - [] composable styles applied
+
+    - [] **link ui**
+      - [] composable styles applied
 
   - [] **profile page, activity dashboard**
     - []
@@ -89,6 +95,10 @@
 
     - popup for folder containing top 5 links: design + ui
     - bunch of stuff, i need to categorize this better lol
+
+  - 14.05
+
+    -
 
   - out of scope:
     - spotify/youtube embedded components for relevant links

@@ -9,6 +9,7 @@ export default function LinkContainer({
   activeIndex,
   setActiveIndex,
 }) {
+  console.log(links);
   return (
     <div
       className={cn(styles.bg, 'px-24 py-8 rounded-2xl space-y-4')}
@@ -19,8 +20,8 @@ export default function LinkContainer({
       </div>
       {links.map((link, idx) => (
         <BookLink
-          key={idx}
-          label={link.label}
+          key={link.id}
+          link={link}
           isActive={activeIndex === idx}
           onClick={() =>
             setActiveIndex(idx === activeIndex ? null : idx)

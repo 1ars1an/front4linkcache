@@ -59,7 +59,7 @@ function RouteComponent() {
     <div>Loading</div>
   ) : (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="grid grid-cols-2">
+      <div className="grid grid-cols-2 w-full max-w-5xl">
         <LinkContainer
           links={data.results}
           styles={styles}

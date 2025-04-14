@@ -2,15 +2,26 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
+import { ExternalLink } from 'lucide-react';
+
+export interface Link {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+  tags: string[];
+}
+
 export default function BookLink({
-  label,
+  link,
   isActive,
   onClick,
 }: {
-  label: string;
+  link: Link; //type this correctly
   isActive: boolean;
   onClick: () => void;
 }) {
+  console.log(link);
   return (
     <motion.div
       layout
@@ -26,12 +37,22 @@ export default function BookLink({
       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       className={cn(
         'rounded-xl border border-purple-800 bg-[#2e1b40]',
-        'cursor-pointer px-8 py-4 text-lg font-semibold text-white',
-        'relative z-10 pixel-border'
+        'cursor-pointer text-sm font-semibold  py-2 px-2 text-white'
       )}
       onClick={onClick}
     >
-      <div className="flex items-center justify-between">{label}</div>
+      <div className="flex items-center">
+        <div className="mr-auto">{link.name}</div>
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="text-white hover:text-purple-400"
+        >
+          <ExternalLink size={20} />
+        </a>
+      </div>
     </motion.div>
   );
 }
