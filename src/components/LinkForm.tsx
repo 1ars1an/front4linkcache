@@ -16,7 +16,8 @@ import {
 } from './ui/form';
 import { Input } from './ui/input';
 
-import { TagMultiSelect } from './TagMultiSelect';
+import { MultiSelect } from './TagMultiSelect';
+import type { Option } from './TagMultiSelect';
 
 const formSchema = z.object({
   name: z
@@ -35,6 +36,8 @@ const formSchema = z.object({
     }),
   tags: z.array(z.number()).optional(), // assuming you're sending an array of tag IDs
 });
+
+const availableTags: Option[] = [{ id: 5, name: 'Development' }];
 
 export function LinkForm() {
   const form = useForm<z.infer<typeof formSchema>>({
@@ -58,12 +61,17 @@ export function LinkForm() {
     });
   }
 
+  const { control, setValue } = form;
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8"
       >
+        <FormDescription className="text-md text-red-700">
+          Enter only the fields to update!
+        </FormDescription>
         <FormField
           control={form.control}
           name="name"
@@ -110,16 +118,17 @@ export function LinkForm() {
         />
 
         <FormField
-          control={form.control}
+          control={control}
           name="tags"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Tags</FormLabel>
               <FormControl>
-                <TagMultiSelect
-                  value={field.value}
-                  onChange={field.onChange}
-                  options={['hi', 'bye']}
+                <MultiSelect
+                  options={availableTags}
+                  selected={field.value}
+                  onChange={(selected) => setValue('tags', selected)}
+                  placeholder="Select tags"
                 />
               </FormControl>
               <FormMessage />

@@ -1,81 +1,87 @@
-import React from 'react';
+import * as React from 'react';
+import { CheckIcon, X } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Command,
+  CommandEmpty,
+  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
-  CommandEmpty,
-  CommandGroup,
 } from '@/components/ui/command';
 import {
   Popover,
-  PopoverTrigger,
   PopoverContent,
+  PopoverTrigger,
 } from '@/components/ui/popover';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
 
-export function TagMultiSelect({
-  value,
-  onChange,
+export interface Option {
+  id: number;
+  name: string;
+}
+
+interface MultiSelectProps {
+  options: Option[];
+  selected: number[];
+  onChange: (selected: number[]) => void;
+  placeholder?: string;
+}
+
+export const MultiSelect: React.FC<MultiSelectProps> = ({
   options,
-}: {
-  value: number[];
-  onChange: (val: number[]) => void;
-  options: { id: number; name: string }[];
-}) {
-  const selectedTags = options.filter((opt) =>
-    value.includes(opt.id)
+  selected,
+  onChange,
+  placeholder = 'Select tags',
+}) => {
+  const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState('');
+
+  const filteredOptions = options.filter((option) =>
+    option.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const toggleTag = (id: number) => {
-    onChange(
-      value.includes(id)
-        ? value.filter((v) => v !== id)
-        : [...value, id]
-    );
+  const toggleOption = (id: number) => {
+    if (selected.includes(id)) {
+      onChange(selected.filter((v) => v !== id));
+    } else {
+      onChange([...selected, id]);
+    }
   };
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className="w-full justify-start flex-wrap min-h-[2.5rem]"
-        >
-          {selectedTags.length === 0
-            ? 'Select tags'
-            : selectedTags.map((tag) => (
-                <Badge key={tag.id} className="mr-1 mb-1">
-                  {tag.name}
-                  <X
-                    className="ml-1 h-3 w-3 cursor-pointer"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleTag(tag.id);
-                    }}
-                  />
-                </Badge>
-              ))}
+        <Button variant="outline" className="w-full justify-between">
+          {selected.length > 0
+            ? options
+                .filter((option) => selected.includes(option.id))
+                .map((option) => option.name)
+                .join(', ')
+            : placeholder}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[300px] p-0">
+      <PopoverContent className="w-full p-0">
         <Command>
-          <CommandInput placeholder="Search tags..." />
+          <CommandInput
+            placeholder="Search tags..."
+            id={search}
+            onidChange={setSearch}
+          />
           <CommandList>
-            <CommandEmpty>No tags found</CommandEmpty>
+            <CommandEmpty>No tags found.</CommandEmpty>
             <CommandGroup>
-              {options.map((opt) => (
+              {filteredOptions.map((option) => (
                 <CommandItem
-                  key={opt.id}
-                  onSelect={() => toggleTag(opt.id)}
-                  className="cursor-pointer"
+                  key={option.id}
+                  onSelect={() => toggleOption(option.id)}
                 >
-                  <span>{opt.name}</span>
-                  {value.includes(opt.id) && (
-                    <span className="ml-auto">✔</span>
-                  )}
+                  <div className="flex items-center justify-between w-full">
+                    <span>{option.name}</span>
+                    {selected.includes(option.id) && (
+                      <CheckIcon className="w-4 h-4" />
+                    )}
+                  </div>
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -84,4 +90,4 @@ export function TagMultiSelect({
       </PopoverContent>
     </Popover>
   );
-}
+};
