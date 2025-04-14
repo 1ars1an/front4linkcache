@@ -12,7 +12,7 @@ export default function LinkContainer({
   console.log(links);
   return (
     <div
-      className={cn(styles.bg, 'px-24 py-8 rounded-2xl space-y-4')}
+      className={cn(styles.bg, 'px-24 py-8 rounded-2xl space-y-2')}
     >
       <div className="bg-[url('/bookshelf.png')] h-20 rounded-t-xl bg-cover" />
       <div className="">

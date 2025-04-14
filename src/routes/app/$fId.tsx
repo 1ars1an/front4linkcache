@@ -10,12 +10,24 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
+  CardFooter,
   CardTitle,
 } from '@/components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ExternalLink } from 'lucide-react';
+import { Clipboard } from 'lucide-react';
 
 import LinkContainer from '../../components/LinkContainer';
+
+export interface Link {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+  tags: string[];
+}
 
 export const Route = createFileRoute('/app/$fId')({
   component: RouteComponent,
@@ -81,21 +93,62 @@ function RouteComponent() {
             }}
           >
             {activeIndex !== null && (
-              <div
-                className={cn(
-                  'w-full min-h-[200px] p-6 rounded-xl shadow-inner border text-black',
-                  styles.bg,
-                  'pixel-border'
-                )}
-                style={{
-                  imageRendering: 'pixelated',
-                  borderImage: styles.border,
-                  borderWidth: '8px',
-                  borderStyle: 'solid',
-                }}
-              >
-                <div>details for:</div>
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex">
+                    {data.results[activeIndex].name}
+                  </CardTitle>
+                  <CardDescription>
+                    {data.results[activeIndex].description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="border-4 border-gray-800 pixelated p-1 bg-gray-300 rounded-lg shadow-lg">
+                    <div className="grid grid-cols-3 gap-1 p-1">
+                      {data.results[activeIndex].tags.map((tag) => (
+                        <div key={tag.id} className="p">
+                          {tag && (
+                            <Badge className="px-2 py-2">
+                              {' '}
+                              {tag.name}
+                            </Badge>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <div className="flex gap-4">
+                    <Button>Edit</Button>
+                    <Button
+                      onClick={() => {
+                        navigator.clipboard
+                          .writeText(data.results[activeIndex].url)
+                          .then(() => {
+                            console.log('URL copied to clipboard!');
+                            // Optionally show a toast/tooltip here
+                          })
+                          .catch((err) => {
+                            console.error('Failed to copy: ', err);
+                          });
+                      }}
+                    >
+                      <Clipboard size={18} />
+                    </Button>
+                    <Button>
+                      <a
+                        href={data.results[activeIndex].url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white hover:text-purple-400"
+                      >
+                        <ExternalLink size={18} />
+                      </a>
+                    </Button>
+                  </div>
+                </CardFooter>
+              </Card>
             )}
           </motion.div>
         </div>

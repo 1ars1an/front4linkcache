@@ -4,13 +4,7 @@ import { cn } from '@/lib/utils';
 
 import { ExternalLink } from 'lucide-react';
 
-export interface Link {
-  id: number;
-  name: string;
-  url: string;
-  description: string;
-  tags: string[];
-}
+import type { Link } from '../routes/app/$fId';
 
 export default function BookLink({
   link,

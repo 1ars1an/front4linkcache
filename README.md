@@ -78,6 +78,8 @@
 
     - [] **link ui**
       - [] composable styles applied
+      - [x] clipboard functionality
+      - [x] base ui
 
   - [] **profile page, activity dashboard**
     - []
@@ -98,7 +100,7 @@
 
   - 14.05
 
-    -
+    - working on the ui for displaying links, link container, link block and link card v1
 
   - out of scope:
     - spotify/youtube embedded components for relevant links
