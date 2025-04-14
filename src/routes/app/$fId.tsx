@@ -58,17 +58,16 @@ function RouteComponent() {
   return isPending ? (
     <div>Loading</div>
   ) : (
-    <div className="flex items-center justify-center">
-      <div className="grid grid-cols-[320px_1fr] grid-rows-[auto_1fr]">
-        {/* Fixed left-side container */}
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="grid grid-cols-2">
         <LinkContainer
           links={data.results}
           styles={styles}
           activeIndex={activeIndex}
           setActiveIndex={setActiveIndex}
         />
-        {/* Detail block in right column, top row */}
-        <div className="col-start-2 row-start-1 p-6">
+        {/* detail block in right column, top row */}
+        <div className="col-start-2 row-start-1">
           <motion.div
             initial={false}
             animate={{
@@ -95,16 +94,14 @@ function RouteComponent() {
                   borderStyle: 'solid',
                 }}
               >
-                <div>
-                  Details for: {data.results[activeIndex].label}
-                </div>
+                <div>details for:</div>
               </div>
             )}
           </motion.div>
         </div>
         {/* Placeholder second row */}
-        <div className="col-start-2 row-start-2 p-6">
-          {/* Optional second row content */}
+        <div className="col-start-2 row-start-2">
+          <div>HIIII</div>
         </div>
       </div>
     </div>
