@@ -16,10 +16,12 @@ import {
 } from '@/components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '@/components/ui/badge';
+
 import { ExternalLink } from 'lucide-react';
 import { Clipboard } from 'lucide-react';
 
 import LinkContainer from '../../components/LinkContainer';
+import { LinkForm } from '../../components/LinkForm';
 
 export interface Link {
   id: number;
@@ -64,6 +66,7 @@ function RouteComponent() {
 
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [selectedBlock, setSelectedBlock] = useState('bookshelf');
+  const [activeEdit, setActiveEdit] = useState<boolean>('false');
 
   const styles = blockStyles[selectedBlock] || blockStyles.obsidian;
 
@@ -71,7 +74,7 @@ function RouteComponent() {
     <div>Loading</div>
   ) : (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="grid grid-cols-2 w-full max-w-5xl">
+      <div className="grid grid-cols-2 w-full max-w-5xl gap-8">
         <LinkContainer
           links={data.results}
           styles={styles}
@@ -103,7 +106,7 @@ function RouteComponent() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="border-4 border-gray-800 pixelated p-1 bg-gray-300 rounded-lg shadow-lg">
+                  <div className="border-4 border-gray-800 p-1 bg-gray-300 rounded-lg shadow-lg">
                     <div className="grid grid-cols-3 gap-1 p-1">
                       {data.results[activeIndex].tags.map((tag) => (
                         <div key={tag.id} className="p">
@@ -120,6 +123,15 @@ function RouteComponent() {
                 </CardContent>
                 <CardFooter>
                   <div className="flex gap-4">
+                    <Button
+                      onClick={() =>
+                        setActiveEdit(
+                          activeEdit === true ? false : true
+                        )
+                      }
+                    >
+                      Edit
+                    </Button>
                     <Button>Edit</Button>
                     <Button
                       onClick={() => {
@@ -154,7 +166,11 @@ function RouteComponent() {
         </div>
         {/* Placeholder second row */}
         <div className="col-start-2 row-start-2">
-          <div>HIIII</div>
+          {activeEdit && (
+            <div className="border-4 border-gray-800 p-4 rounded-lg">
+              <LinkForm></LinkForm>
+            </div>
+          )}
         </div>
       </div>
     </div>
