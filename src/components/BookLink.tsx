@@ -26,7 +26,7 @@ export default function BookLink({
       transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       className={cn(
         'rounded-xl border border-purple-800 bg-[#2e1b40]',
-        'cursor-pointer px-6 py-4 text-lg font-semibold text-white',
+        'cursor-pointer px-8 py-4 text-lg font-semibold text-white',
         'relative z-10 pixel-border'
       )}
       onClick={onClick}

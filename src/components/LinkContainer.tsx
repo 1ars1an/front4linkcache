@@ -11,20 +11,11 @@ export default function LinkContainer({
 }) {
   return (
     <div
-      className={cn(
-        styles.bg,
-        'p-6 rounded-2xl space-y-4 pixel-border sticky top-1/4 self-start z-20 h-fit'
-      )}
-      style={{
-        imageRendering: 'pixelated',
-        borderImage: styles.border,
-        borderWidth: '8px',
-        borderStyle: 'solid',
-      }}
+      className={cn(styles.bg, 'px-24 py-8 rounded-2xl space-y-4')}
     >
-      <div className="bg-[url('/bookshelf-top.png')] h-20 rounded-t-xl bg-cover" />
-      <div className="flex justify-between items-center">
-        <span className="text-white font-bold">Block Theme</span>
+      <div className="bg-[url('/bookshelf.png')] h-20 rounded-t-xl bg-cover" />
+      <div className="">
+        <span className="text-black font-bold">Get Folder Name</span>
       </div>
       {links.map((link, idx) => (
         <BookLink

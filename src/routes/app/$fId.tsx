@@ -58,7 +58,7 @@ function RouteComponent() {
   return isPending ? (
     <div>Loading</div>
   ) : (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center min-h-screen">
       <div className="grid grid-cols-2">
         <LinkContainer
           links={data.results}
@@ -83,7 +83,7 @@ function RouteComponent() {
             {activeIndex !== null && (
               <div
                 className={cn(
-                  'w-full min-h-[200px] p-6 rounded-xl shadow-inner border text-white',
+                  'w-full min-h-[200px] p-6 rounded-xl shadow-inner border text-black',
                   styles.bg,
                   'pixel-border'
                 )}
