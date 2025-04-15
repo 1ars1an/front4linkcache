@@ -10,6 +10,7 @@ export interface AuthContext {
   loginUser: (userData: userData) => Promise<string | Error>;
   logoutUser: () => Promise<void>;
   isAuthenticated: () => Promise<AxiosResponse<any, any>>;
+  user: boolean;
 }
 
 export interface userData {
@@ -40,107 +41,81 @@ apiAuthClient.interceptors.response.use(
   commonErrorHandler
 );
 
-export const registerUser = async (userData: userRegisterData) => {
-  const REGISTRATION_ENDPOINT = 'registration/';
-
-  const requestUserData = {
-    username: userData.username,
-    email: userData.email,
-    password1: userData.password,
-    password2: userData.confirmPassword,
-  };
-
-  try {
-    console.debug(
-      `Attempting registration at ${apiAuthClient.defaults.baseURL}${REGISTRATION_ENDPOINT} with data:`,
-      requestUserData
-    );
-
-    const response = await apiAuthClient.post(
-      REGISTRATION_ENDPOINT,
-      requestUserData
-    );
-
-    //logging the successful response
-    console.debug(
-      'Registration successful. Status:',
-      response.status,
-      'Data:',
-      response.data
-    );
-
-    return response.data.key;
-  } catch (error) {
-    // error thrown here likely caught by interceptor
-    console.error('Context: Registration failed:', error); //log for functions's context
-    throw error; //rethrow so calling code handles it
-  }
-};
-
-export const loginUser = async (userData: userData) => {
-  const LOGIN_ENDPOINT = 'login/';
-
-  try {
-    console.debug(
-      `Attempting registration at ${apiAuthClient.defaults.baseURL}${LOGIN_ENDPOINT} with data:`,
-      userData
-    );
-
-    const response = await apiAuthClient.post(
-      LOGIN_ENDPOINT,
-      userData
-    );
-
-    console.debug(
-      'Login successful. Status:',
-      response.status,
-      'Data:',
-      response.data
-    );
-
-    return response.data.key as string;
-  } catch (error) {
-    console.error('Context: Login failed:', error);
-    throw error;
-  }
-};
-
-export const logoutUser = async () => {
-  const LOGOUT_ENDPOINT = 'logout/';
-
-  try {
-    const response = await apiAuthClient.post(LOGOUT_ENDPOINT);
-
-    console.debug(
-      'Login successful. Status:',
-      response.status,
-      'Data:',
-      response.data
-    );
-
-    return response.data;
-  } catch (error) {
-    console.error('Context: Login failed:', error);
-    throw error;
-  }
-};
-
-export const isAuthenticated = async () => {
-  const AUTH_ENDPOINT = 'user/';
-  try {
-    const response = await apiAuthClient.get(AUTH_ENDPOINT);
-    return response;
-  } catch (error) {
-    console.error('Context: Auth failed:', error);
-    throw error;
-  }
-};
-
 export function AuthProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [user, setUser] = React.useState<boolean>(false);
+
+  const registerUser = async (userData: userRegisterData) => {
+    const REGISTRATION_ENDPOINT = 'registration/';
+
+    const requestUserData = {
+      username: userData.username,
+      email: userData.email,
+      password1: userData.password,
+      password2: userData.confirmPassword,
+    };
+
+    try {
+      const response = await apiAuthClient.post(
+        REGISTRATION_ENDPOINT,
+        requestUserData
+      );
+      return response.data.key;
+    } catch (error) {
+      console.error('Context: Registration failed:', error);
+      throw error;
+    }
+  };
+
+  const loginUser = async (userData: userData) => {
+    const LOGIN_ENDPOINT = 'login/';
+    try {
+      const response = await apiAuthClient.post(
+        LOGIN_ENDPOINT,
+        userData
+      );
+      setUser(true); // <- set user on login
+      return response.data.key as string;
+    } catch (error) {
+      console.error('Context: Login failed:', error);
+      throw error;
+    }
+  };
+
+  const logoutUser = async () => {
+    const LOGOUT_ENDPOINT = 'logout/';
+
+    try {
+      const response = await apiAuthClient.post(
+        LOGOUT_ENDPOINT,
+        {} // body can stay empty
+      );
+
+      setUser(false);
+      return response.data;
+    } catch (error) {
+      console.error('Context: Logout failed:', error);
+      setUser(false);
+      throw error;
+    }
+  };
+
+  const isAuthenticated = async () => {
+    const AUTH_ENDPOINT = 'user/';
+    try {
+      const response = await apiAuthClient.get(AUTH_ENDPOINT);
+      setUser(true); // <- set user if authenticated
+      return response;
+    } catch (error) {
+      console.error('Context: Auth failed:', error);
+      setUser(false);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -148,6 +123,7 @@ export function AuthProvider({
         loginUser,
         logoutUser,
         isAuthenticated,
+        user,
       }}
     >
       {children}

@@ -20,21 +20,10 @@ import { MultiSelect } from './TagMultiSelect';
 import type { Option } from './TagMultiSelect';
 
 const formSchema = z.object({
-  name: z
-    .string()
-    .optional()
-    .refine((val) => val === undefined || val.trim() !== '', {
-      message: 'Name cannot be empty if provided',
-    }),
+  name: z.string().optional(),
   description: z.string().optional(),
-  url: z
-    .string()
-    .url('Must be a valid URL')
-    .optional()
-    .refine((val) => val === undefined || val.trim() !== '', {
-      message: 'URL cannot be empty if provided',
-    }),
-  tags: z.array(z.number()).optional(), // assuming you're sending an array of tag IDs
+  url: z.string().url('Must be a valid URL').optional(),
+  tags: z.array(z.number()).optional(),
 });
 
 const availableTags: Option[] = [{ id: 5, name: 'Development' }];
