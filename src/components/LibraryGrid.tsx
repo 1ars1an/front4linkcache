@@ -1,14 +1,22 @@
 import React from 'react';
 
+import { useMutation } from '@tanstack/react-query';
+
 import type {
   paginatedFolderData,
   userFolder,
 } from '../services/requests';
 
+import { FolderPlus } from 'lucide-react';
+import { Link as LinkIcon } from 'lucide-react';
+
 import { Button } from './ui/button';
 import FolderPopup from './FolderPopup';
+import { FolderPopover } from './FolderForm';
 
 import { Link } from '@tanstack/react-router';
+
+import { createNewFolder } from '../services/requests';
 
 type LibraryGridProps = {
   apiData: paginatedFolderData;
@@ -29,6 +37,17 @@ export default function LibraryGrid({
 
   const folders = apiData.results;
 
+  const { mutate } = useMutation({
+    mutationFn: createNewFolder,
+    onSuccess: () => {
+      console.log('success');
+    },
+  });
+
+  function handleFolderCreate(folderName: string) {
+    mutate(folderName);
+  }
+
   const toggleCard = (id: number | null) => {
     setOpenCardId(openCardId === id ? null : id);
   };
@@ -38,7 +57,7 @@ export default function LibraryGrid({
   );
 
   return (
-    <div className="container p-4">
+    <div className="container p-4 flex flex-col gap-8">
       {openCardId && (
         <FolderPopup
           openCard={openCard}
@@ -46,7 +65,24 @@ export default function LibraryGrid({
         />
       )}
 
-      <div className="p-4">Toolbar</div>
+      <div className="w-1/2 self-center bg-gradient-to-br from-gray-200/40 via-gray-300/30 to-gray-500/20 backdrop-blur-md shadow-md border border-gray-300 rounded-xl">
+        <div className="px-4 py-2 flex gap-16 items-center">
+          <Button
+            variant="ghost"
+            className="p-0 hover:bg-transparent focus-visible:ring-0"
+            asChild
+          >
+            <FolderPopover onFolderCreate={handleFolderCreate} />
+          </Button>
+          <Button
+            variant="ghost"
+            className="p-0 hover:bg-transparent focus-visible:ring-0"
+            asChild
+          >
+            <LinkIcon size={23} />
+          </Button>
+        </div>
+      </div>
 
       {/* Bookshelf structure */}
       <div className="relative">

@@ -3,6 +3,7 @@ import React from 'react';
 
 import { Button } from './ui/button';
 import { useAuth } from '../services/auth';
+import { Link as LinkIcon } from 'lucide-react';
 
 export default function Header() {
   const { user, logoutUser } = useAuth();
@@ -19,19 +20,28 @@ export default function Header() {
     <header className="w-full bg-gradient-to-br from-gray-300 via-gray-400 to-gray-500 shadow-md border-b border-gray-600 rounded-xl">
       <div className="px-4 py-4 flex text-gray-900">
         <nav className="flex items-center w-full">
-          <div className="flex gap-4 mr-auto font-semibold text-sm">
+          <div className="flex items-center gap-8 mr-auto font-semibold text-sm">
             <Link
-              to="/"
+              to="/app"
               className="hover:text-gray-700 transition-colors rounded-md px-2 py-1"
             >
               Home
             </Link>
             <Link
-              to="/profile"
+              to="/app/profile"
               className="hover:text-gray-700 transition-colors rounded-md px-2 py-1"
             >
               Profile
             </Link>
+            {user && (
+              <Button
+                variant="ghost"
+                className="p-0 hover:bg-transparent focus-visible:ring-0 ml-5"
+                asChild
+              >
+                <LinkIcon size={23} />
+              </Button>
+            )}
           </div>
 
           {/* Auth Buttons */}

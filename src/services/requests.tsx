@@ -128,3 +128,18 @@ export const getAllFolderLinks = async (
     throw error;
   }
 };
+
+export const createNewFolder = async (folderName: string) => {
+  const DATA_ENDPOINT = 'folders';
+
+  try {
+    const response = await apiDataClient.post(DATA_ENDPOINT, {
+      name: folderName,
+    });
+    console.log('success', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Context: Folder creation failed:', error);
+    throw error;
+  }
+};

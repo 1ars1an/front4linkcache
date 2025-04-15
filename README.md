@@ -62,6 +62,16 @@
     - [x] query to retrieve user folders data
     - [x] popup for mini-folder data
 
+    - **toolbar ui**
+      - [] create new folder
+        - [x] interaction component
+        - [x] handling component
+        - [] handling code
+          - [] useQuery hook
+          - [x] api request
+        - [x] design? keeping shadcn base for now
+      - [] create new link
+
   - [] **folder ui**
 
     - [x] query to retrieve folder data
@@ -102,5 +112,12 @@
 
     - working on the ui for displaying links, link container, link block and link card v1
 
+  - 15.05
+    - toolbar ui
+
+- ## augments
+
   - out of scope:
     - spotify/youtube embedded components for relevant links
+
+- ## decision space
