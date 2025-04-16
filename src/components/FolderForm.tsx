@@ -22,16 +22,15 @@ export function FolderPopover({
 
   function handleCreate() {
     if (!folderName.trim()) return;
-    onFolderCreate(folderName); // Trigger the folder creation logic
-    setFolderName(''); // Reset the input
-    const closeButton = popoverRef.current?.querySelector(
-      '[data-radix-popover-dismiss]'
-    ) as HTMLElement;
-    closeButton?.click(); // Close the popover automatically
+    onFolderCreate(folderName); // trigger the folder creation logic
+    setFolderName('');
+    setIsOpen(false); // Close the popover
   }
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
@@ -42,7 +41,7 @@ export function FolderPopover({
           <FolderPlus size={24} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent ref={popoverRef} className="w-64 space-y-2">
+      <PopoverContent className="w-64 space-y-2">
         <Input
           placeholder="Folder name"
           value={folderName}
@@ -54,11 +53,7 @@ export function FolderPopover({
             }
           }}
         />
-        <Button
-          onClick={handleCreate}
-          className="w-full"
-          data-radix-popover-dismiss
-        >
+        <Button onClick={handleCreate} className="w-full">
           Create
         </Button>
       </PopoverContent>

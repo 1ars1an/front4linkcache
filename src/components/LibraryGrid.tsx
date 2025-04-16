@@ -67,13 +67,7 @@ export default function LibraryGrid({
 
       <div className="w-1/2 self-center bg-gradient-to-br from-gray-200/40 via-gray-300/30 to-gray-500/20 backdrop-blur-md shadow-md border border-gray-300 rounded-xl">
         <div className="px-4 py-2 flex gap-16 items-center">
-          <Button
-            variant="ghost"
-            className="p-0 hover:bg-transparent focus-visible:ring-0"
-            asChild
-          >
-            <FolderPopover onFolderCreate={handleFolderCreate} />
-          </Button>
+          <FolderPopover onFolderCreate={handleFolderCreate} />
           <Button
             variant="ghost"
             className="p-0 hover:bg-transparent focus-visible:ring-0"
