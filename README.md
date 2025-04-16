@@ -63,6 +63,7 @@
     - [x] popup for mini-folder data
 
     - **toolbar ui**
+      - [] figure out why CSRF tokens aren't included in the request
       - [] create new folder
         - [x] interaction component
         - [x] handling component
@@ -71,6 +72,7 @@
           - [x] api request
         - [x] design? keeping shadcn base for now
       - [] create new link
+      - [] pagination
 
   - [] **folder ui**
 

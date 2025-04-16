@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { commonErrorHandler } from './apiError';
+import Cookies from 'js-cookie';
 
 export interface paginatedData {
   count: number;
@@ -38,7 +39,7 @@ export interface paginatedLinkData extends paginatedData {
 }
 
 const apiDataClient = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/',
+  baseURL: 'http://localhost:8000/api/',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -46,6 +47,14 @@ const apiDataClient = axios.create({
   },
   xsrfCookieName: 'csrftoken',
   xsrfHeaderName: 'X-CSRFToken',
+});
+
+apiDataClient.interceptors.request.use((config) => {
+  const csrfToken = Cookies.get('csrftoken');
+  if (csrfToken) {
+    config.headers['X-CSRFToken'] = csrfToken;
+  }
+  return config;
 });
 
 apiDataClient.interceptors.response.use(
