@@ -115,6 +115,24 @@ export const getUserFolder = async (id: number) => {
   }
 };
 
+export const getUserFolderNames = async () => {
+  const DATA_ENDPOINT = `folders/names`;
+
+  try {
+    const response = await apiDataClient.get(DATA_ENDPOINT);
+    console.debug(
+      'Folder request successful. Status:',
+      response.status,
+      'Data:',
+      response.data
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Context: Folder names request failed:', error);
+    throw error;
+  }
+};
+
 export const getTopUserLinks = async (id: number) => {
   const DATA_ENDPOINT = `folders/retrieve/${id}`;
 

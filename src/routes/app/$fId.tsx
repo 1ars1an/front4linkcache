@@ -21,7 +21,7 @@ import { ExternalLink } from 'lucide-react';
 import { Clipboard } from 'lucide-react';
 
 import LinkContainer from '../../components/LinkContainer';
-import { LinkForm } from '../../components/LinkForm';
+import { LinkUpdateForm } from '../../components/LinkUpdateForm';
 
 export interface Link {
   id: number;
@@ -170,7 +170,7 @@ function RouteComponent() {
         <div className="col-start-2 row-start-2">
           {activeEdit && (
             <div className="border-4 border-gray-800 p-4 rounded-lg">
-              <LinkForm></LinkForm>
+              <LinkUpdateForm></LinkUpdateForm>
             </div>
           )}
         </div>

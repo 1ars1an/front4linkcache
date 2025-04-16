@@ -19,7 +19,7 @@ import {
 
 import FolderPopup from './FolderPopup';
 import { FolderPopover } from './FolderForm';
-import PaginationComponent from './ui/PaginationComponent';
+import PaginationComponent from './PaginationComponent';
 
 type LibraryGridProps = {
   apiData: paginatedFolderData;

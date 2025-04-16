@@ -5,6 +5,8 @@ import { Button } from './ui/button';
 import { useAuth } from '../services/auth';
 import { Link as LinkIcon } from 'lucide-react';
 
+import { LinkCreateDialog } from './LinkCreateDialog';
+
 export default function Header() {
   const { user, logoutUser } = useAuth();
   const router = useRouter();
@@ -37,13 +39,15 @@ export default function Header() {
               Profile
             </Link>
             {user && (
-              <Button
-                variant="ghost"
-                className="p-0 hover:bg-transparent focus-visible:ring-0 ml-5"
-                asChild
-              >
-                <LinkIcon size={20} />
-              </Button>
+              <LinkCreateDialog>
+                <Button
+                  variant="ghost"
+                  className="p-0 hover:bg-transparent focus-visible:ring-0 ml-5"
+                  asChild
+                >
+                  <LinkIcon size={20} />
+                </Button>
+              </LinkCreateDialog>
             )}
           </div>
 

@@ -71,7 +71,7 @@
           - [x] useQuery hook
           - [x] api request
         - [x] design? keeping shadcn base for now
-      - [] create new link
+      - [] create new link ^
       - [x] pagination
 
   - [] **folder ui**

@@ -1,5 +1,9 @@
 import React from 'react';
 
+import { useQuery } from '@tanstack/react-query';
+
+import { getUserFolderNames } from '../services/requests';
+
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -16,19 +20,28 @@ import {
 } from './ui/form';
 import { Input } from './ui/input';
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
 import { MultiSelect } from './TagMultiSelect';
 import type { Option } from './TagMultiSelect';
 
 const formSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
-  url: z.string().url('Must be a valid URL').optional(),
+  url: z.string().url('Must be a valid URL'),
   tags: z.array(z.number()).optional(),
+  folder: z.string().optional(),
 });
 
 const availableTags: Option[] = [{ id: 5, name: 'Development' }];
 
-export function LinkForm() {
+export function LinkCreateForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,15 +58,26 @@ export function LinkForm() {
 
   const { control, setValue } = form;
 
+  const { data, isPending } = useQuery({
+    queryKey: ['folderNames'],
+    queryFn: () => getUserFolderNames(),
+    staleTime: 18000,
+  });
+
+  console.log(data);
+
+  const newData = [{ id: 5, name: 'Development' }];
+
+  if (isPending) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="space-y-8"
       >
-        <FormDescription className="text-md text-red-700">
-          Enter only the fields to update!
-        </FormDescription>
         <FormField
           control={form.control}
           name="name"
@@ -94,6 +118,32 @@ export function LinkForm() {
               <FormControl>
                 <Input placeholder="https://example.com" {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="folder"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Folder</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a folder (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {data.map((folder) => (
+                    <SelectItem key={folder.id} value={folder.name}>
+                      {folder.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
