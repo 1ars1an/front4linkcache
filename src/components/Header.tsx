@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useRouter } from '@tanstack/react-router';
 import React from 'react';
 
 import { Button } from './ui/button';
@@ -7,12 +7,15 @@ import { Link as LinkIcon } from 'lucide-react';
 
 export default function Header() {
   const { user, logoutUser } = useAuth();
+  const router = useRouter();
 
   const handleLogout = async () => {
     try {
       await logoutUser();
+      router.navigate({ to: '/login' });
     } catch (error) {
       console.error('Error logging out:', error);
+      router.navigate({ to: '/login' });
     }
   };
 
@@ -39,7 +42,7 @@ export default function Header() {
                 className="p-0 hover:bg-transparent focus-visible:ring-0 ml-5"
                 asChild
               >
-                <LinkIcon size={23} />
+                <LinkIcon size={20} />
               </Button>
             )}
           </div>
