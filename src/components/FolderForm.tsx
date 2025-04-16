@@ -1,5 +1,10 @@
 import React from 'react';
+
 import { useState, useRef } from 'react';
+
+import { useMutation } from '@tanstack/react-query';
+
+import { createNewFolderMutation } from '../services/requests';
 
 import {
   Popover,
@@ -12,17 +17,14 @@ import { Input } from '@/components/ui/input';
 
 import { FolderPlus } from 'lucide-react';
 
-export function FolderPopover({
-  onFolderCreate,
-}: {
-  onFolderCreate: (folderName: string) => void;
-}) {
-  const [folderName, setFolderName] = useState('');
-  const popoverRef = useRef<HTMLDivElement>(null);
+export function FolderPopover() {
+  const [folderName, setFolderName] = useState<string>('');
+
+  const { mutate } = createNewFolderMutation();
 
   function handleCreate() {
     if (!folderName.trim()) return;
-    onFolderCreate(folderName); // trigger the folder creation logic
+    mutate(folderName); // trigger the folder creation logic
     setFolderName('');
     setIsOpen(false); // Close the popover
   }

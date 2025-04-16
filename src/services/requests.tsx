@@ -2,6 +2,8 @@ import axios from 'axios';
 import { commonErrorHandler } from './apiError';
 import Cookies from 'js-cookie';
 
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 export interface paginatedData {
   count: number;
   next: string | null;
@@ -61,6 +63,19 @@ apiDataClient.interceptors.response.use(
   (response) => response, //success, pass response directly
   commonErrorHandler
 );
+
+export function createNewFolderMutation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: createNewFolder,
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['folders'],
+      });
+    },
+  });
+}
 
 export const getAllUserFolders = async (
   page: number = 1
