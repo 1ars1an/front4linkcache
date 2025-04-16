@@ -8,8 +8,18 @@ import type {
 import { Link as LinkIcon } from 'lucide-react';
 
 import { Button } from './ui/button';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from './ui/pagination';
+
 import FolderPopup from './FolderPopup';
 import { FolderPopover } from './FolderForm';
+import PaginationComponent from './ui/PaginationComponent';
 
 type LibraryGridProps = {
   apiData: paginatedFolderData;
@@ -29,6 +39,7 @@ export default function LibraryGrid({
   console.log(apiData);
 
   const folders = apiData.results;
+  const totalPages = Math.ceil(apiData.count / 12);
 
   const toggleCard = (id: number | null) => {
     setOpenCardId(openCardId === id ? null : id);
@@ -37,6 +48,14 @@ export default function LibraryGrid({
   const openCard: userFolder = folders.find(
     (card) => card.id === openCardId
   );
+
+  const handlePrevious = () => {
+    setPageId((prevPageId) => Math.max(prevPageId - 1, 1));
+  };
+
+  const handleNext = () => {
+    setPageId((prevPageId) => Math.min(prevPageId + 1, totalPages));
+  };
 
   return (
     <div className="container p-4 flex flex-col gap-8">
@@ -47,16 +66,25 @@ export default function LibraryGrid({
         />
       )}
 
-      <div className="w-1/2 self-center bg-gradient-to-br from-gray-200/40 via-gray-300/30 to-gray-500/20 backdrop-blur-md shadow-md border border-gray-300 rounded-xl">
-        <div className="px-4 py-2 flex gap-16 items-center">
+      <div className="flex items-center w-1/2 self-center bg-gradient-to-br from-gray-200/40 via-gray-300/30 to-gray-500/20 backdrop-blur-md shadow-md border border-gray-300 rounded-xl">
+        <div className="px-4 py-2 flex gap-16 items-center mr-auto">
           <FolderPopover />
           <Button
             variant="ghost"
             className="p-0 hover:bg-transparent focus-visible:ring-0"
             asChild
           >
-            <LinkIcon size={23} />
+            <LinkIcon size={21} />
           </Button>
+        </div>
+        <div>
+          <PaginationComponent
+            currentPage={pageId}
+            totalPages={totalPages}
+            onPageChange={setPageId}
+            hasPreviousPage={pageId > 1}
+            hasNextPage={pageId < totalPages}
+          />
         </div>
       </div>
 

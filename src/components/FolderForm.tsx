@@ -40,7 +40,7 @@ export function FolderPopover() {
           cursor="pointer"
           asChild
         >
-          <FolderPlus size={24} />
+          <FolderPlus size={22} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64 space-y-2">

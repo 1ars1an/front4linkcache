@@ -28,6 +28,7 @@ function RouteComponent() {
   const { data, isPending } = useQuery({
     queryKey: ['folders', `${pageId}`],
     queryFn: () => getAllUserFolders(pageId),
+    staleTime: 18000,
   });
 
   return (

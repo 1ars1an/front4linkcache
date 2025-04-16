@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
+
 import type { AxiosResponse } from 'axios';
 import { commonErrorHandler } from './apiError';
 
@@ -34,6 +36,14 @@ const apiAuthClient = axios.create({
   },
   xsrfCookieName: 'csrftoken',
   xsrfHeaderName: 'X-CSRFToken',
+});
+
+apiAuthClient.interceptors.request.use((config) => {
+  const csrfToken = Cookies.get('csrftoken');
+  if (csrfToken) {
+    config.headers['X-CSRFToken'] = csrfToken;
+  }
+  return config;
 });
 
 apiAuthClient.interceptors.response.use(
